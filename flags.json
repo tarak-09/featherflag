@@ -1,0 +1,29 @@
+{
+  "flags": [
+    {
+      "key": "new-checkout",
+      "enabled": true,
+      "rolloutPercentage": 25,
+      "description": "Rebuilt checkout flow. Ramping 5% -> 25% -> 100%.",
+      "include": ["qa-team", "user-1042"],
+      "exclude": ["user-9001"]
+    },
+    {
+      "key": "dark-mode",
+      "enabled": true,
+      "rolloutPercentage": 100,
+      "description": "Fully rolled out. Safe to remove the flag and the branch."
+    },
+    {
+      "key": "experimental-search",
+      "enabled": true,
+      "rolloutPercentage": 5,
+      "description": "Early canary. Watch p99 latency before ramping."
+    },
+    {
+      "key": "legacy-export",
+      "enabled": false,
+      "description": "Killed after the incident on 2026-07-02. Kept as a kill switch."
+    }
+  ]
+}

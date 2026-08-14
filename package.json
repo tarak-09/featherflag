@@ -1,0 +1,16 @@
+{
+  "name": "featherflag",
+  "version": "0.1.0",
+  "description": "A small, production-shaped feature flag service with deterministic rollouts.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage"
+  },
+  "license": "MIT"
+}
