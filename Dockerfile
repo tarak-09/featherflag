@@ -24,6 +24,25 @@ COPY --from=test --chown=node:node /app/package.json ./
 COPY --from=test --chown=node:node /app/src ./src
 COPY --from=test --chown=node:node /app/flags.json ./
 
+# Strip the bundled package managers. This service has no dependencies and
+# never shells out to npm, yarn, or corepack — the runtime entrypoint is
+# `node src/index.js` — so in the runtime image they are pure attack surface.
+#
+# They are also, in practice, the *only* attack surface: every HIGH/CRITICAL
+# CVE this image has ever reported came from npm's own dependency tree
+# (tar, brace-expansion, sigstore, picomatch), not from anything this service
+# ships. Deleting them removes the findings by removing the code, which is a
+# different thing from suppressing them.
+RUN rm -rf \
+      /usr/local/lib/node_modules/npm \
+      /usr/local/lib/node_modules/corepack \
+      /opt/yarn-v* \
+      /usr/local/bin/npm \
+      /usr/local/bin/npx \
+      /usr/local/bin/corepack \
+      /usr/local/bin/yarn \
+      /usr/local/bin/yarnpkg
+
 # node:alpine ships an unprivileged `node` user. Running as root inside a
 # container is a needless escalation path.
 USER node
