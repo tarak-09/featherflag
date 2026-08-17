@@ -68,6 +68,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment || 'dev' }}
+    # Skip rather than fail until Azure is configured. A deploy job that cannot
+    # possibly succeed should not run on every push — a permanently red build
+    # trains everyone to ignore the build. Set the AZURE_RESOURCE_GROUP
+    # repository variable (plus the AZURE_* secrets) and this starts running.
+    if: vars.AZURE_RESOURCE_GROUP != ''
 
     steps:
       - uses: actions/checkout@v4
