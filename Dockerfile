@@ -17,6 +17,8 @@ FROM node:22-alpine AS runtime
 # nothing to npm-audit at build time. Adding one should be a deliberate act.
 WORKDIR /app
 
+RUN apk update && apk upgrade --no-cache
+
 # Copied from the test stage rather than the build context, so the runtime image
 # has a real dependency on the tests. BuildKit prunes stages nothing depends on,
 # and a test stage referenced by nothing is silently skipped.
