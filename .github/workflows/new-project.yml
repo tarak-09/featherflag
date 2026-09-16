@@ -1,0 +1,44 @@
+# .github/workflows/new-project.yml
+#
+# Runs every 2 days and asks Claude to build and push a new small project
+# into this repo (or org, if you point it at a "create repo" step instead).
+#
+# Setup required before this runs:
+#   1. Install the Claude GitHub App on this repo (run /install-github-app
+#      from Claude Code, or install manually from github.com/apps/claude)
+#   2. Add ANTHROPIC_API_KEY as a repo (or org) secret
+
+name: Scheduled New Project
+
+on:
+  schedule:
+    - cron: '0 9 */2 * *'   # 9am UTC, every 2 days — adjust to your timezone
+  workflow_dispatch:         # lets you trigger a run manually from the Actions tab
+
+jobs:
+  create-project:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Create a new small, self-contained project in a new folder under
+            /projects/ in this repo. Pick a fresh idea each time (avoid
+            duplicating any existing folder under /projects/).
+
+            Constraints:
+            - Keep it small: a single focused tool, script, or mini-app —
+              not a multi-day undertaking.
+            - Stick to: Python or TypeScript (alternate if you like).
+            - Include a short README.md explaining what it does and how to run it.
+            - Include basic tests if the project type supports it.
+            - Commit with a clear message and open a pull request titled
+              "New project: <name>" rather than pushing directly to main.
+
+            After finishing, summarize what you built in the PR description.
